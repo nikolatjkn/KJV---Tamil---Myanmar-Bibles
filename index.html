@@ -734,6 +734,17 @@
         .workspace-verse:hover { background: rgba(255,255,255,0.04); }
         .workspace-verse.selected { background: rgba(79,140,255,0.12); }
         .workspace-vnum { color: #4f8cff; font-weight: 700; font-size: 0.75rem; margin-right: 6px; }
+        .cx-overlay { position: fixed; inset: 0; z-index: 9000; background: #0b0b0b; display: flex; flex-direction: column; }
+        .cx-head { display: flex; align-items: center; gap: 4px; padding: 8px 10px; border-bottom: 1px solid rgba(255,255,255,0.1); flex-wrap: wrap; }
+        .cx-title { font-weight: 700; color: #fff; font-size: 0.95rem; margin: 0 6px; }
+        .cx-body { flex: 1; overflow-y: auto; padding: 12px; -webkit-overflow-scrolling: touch; }
+        .cx-item { padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,0.07); }
+        .cx-ref { font-weight: 700; color: #4f8cff; font-size: 0.88rem; }
+        .cx-text { color: rgba(255,255,255,0.7); font-size: 0.82rem; line-height: 1.6; margin: 4px 0 6px; }
+        .cx-note { color: rgba(255,255,255,0.45); font-size: 0.75rem; margin: 6px 0 10px; }
+        .cx-input { width: 100%; box-sizing: border-box; padding: 9px 11px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.12); background: rgba(255,255,255,0.05); color: #fff; font-size: 0.85rem; margin-bottom: 8px; }
+        .cx-on { background: #4f8cff !important; border-color: #4f8cff !important; color: #fff !important; }
+        .cx-toast { position: sticky; top: 0; background: #1f3b73; color: #fff; padding: 6px 10px; border-radius: 8px; font-size: 0.8rem; margin-bottom: 8px; z-index: 2; }
         .workspace-xref { font-size: 0.8rem; padding: 6px 0; border-bottom: 1px solid rgba(255,255,255,0.05); color: rgba(255,255,255,0.6); cursor: pointer; }
         .workspace-xref:hover { color: #4f8cff; }
         .workspace-tool-btn { font-size: 0.75rem; padding: 6px 12px; border-radius: 7px; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); color: rgba(255,255,255,0.6); cursor: pointer; margin-right: 6px; margin-bottom: 6px; }
@@ -1437,6 +1448,107 @@
 })();
 </script>
 
+<link rel="stylesheet" href="theme-pack.css">
+<script src="theme-pack.js"></script>
+<style id="bs-toolbar-fix">
+@media (max-width: 768px) {
+  .main { padding-top: 0 !important; padding-bottom: calc(112px + env(safe-area-inset-bottom, 0px)) !important; }
+  .main::before { content: ""; display: block; height: 54px; }
+  html .reader-header[style*="position: sticky"] { display: none !important; }
+  #bs-bottombar { display: flex; align-items: center; gap: 12px; position: fixed; left: 0; right: 0; bottom: 0; z-index: 900; box-sizing: border-box;
+    height: calc(80px + env(safe-area-inset-bottom, 0px)); padding: 0 14px env(safe-area-inset-bottom, 0px) 14px;
+    background: var(--bt-bg, #0b0b0b); border-top: 1px solid var(--bt-border, rgba(255,255,255,.1)); }
+  #bs-bottombar.bs-off { display: none; }
+  #bs-bottombar button { border: 0; margin: 0; padding: 0; cursor: pointer; color: var(--bt-text, #fff); font-family: system-ui, sans-serif;
+    background: rgba(var(--bt-ink-rgb, 255,255,255), .12); -webkit-tap-highlight-color: transparent; }
+  #bs-bottombar .bs-play { flex: none; width: 58px; height: 58px; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
+  #bs-bottombar .bs-play:active, #bs-bottombar .bs-pill button:active { background: rgba(var(--bt-accent-rgb, 79,140,255), .35); }
+  #bs-bottombar .bs-pill { flex: 1 1 auto; min-width: 0; height: 58px; border-radius: 29px; display: flex; align-items: center; overflow: hidden;
+    background: rgba(var(--bt-ink-rgb, 255,255,255), .12); }
+  #bs-bottombar .bs-pill button { background: transparent; height: 58px; display: flex; align-items: center; justify-content: center; }
+  #bs-bottombar .bs-arrow { flex: none; width: 66px; }
+  #bs-bottombar .bs-arrow:disabled { opacity: .3; }
+  #bs-bottombar .bs-pick { flex: 1 1 auto; min-width: 0; gap: 8px; padding: 0 4px; font-size: 1.12rem; font-weight: 700; white-space: nowrap; }
+  #bs-bottombar .bs-bk { min-width: 0; overflow: hidden; text-overflow: ellipsis; }
+  #bs-bottombar .bs-ch { flex: none; }
+  html #bs3-aa, html #bs2-btn, html .lang-fab { position: fixed !important; width: 38px !important; height: 38px !important;
+    top: calc(8px + env(safe-area-inset-top, 0px)) !important; bottom: auto !important; left: auto !important; margin: 0 !important;
+    z-index: 8000 !important; font-size: 14px !important; border: 0 !important; box-shadow: none !important;
+    background: rgba(var(--bt-ink-rgb, 255,255,255), .12) !important; color: var(--bt-text, #fff) !important;
+    -webkit-backdrop-filter: none !important; backdrop-filter: none !important; transition: transform .2s ease, opacity .2s ease; }
+  html .lang-fab { right: 10px !important; font-size: 1.1rem !important; }
+  html #bs2-btn { right: 56px !important; }
+  html #bs3-aa { right: 102px !important; font-size: 13px !important; }
+  html #bs3-aap, html .lang-popover { top: calc(54px + env(safe-area-inset-top, 0px)) !important; right: 10px !important; left: auto !important; bottom: auto !important; }
+  html .selection-toolbar { bottom: calc(92px + env(safe-area-inset-bottom, 0px)) !important; }
+  html.bs-away #bs3-aa, html.bs-away #bs2-btn, html.bs-away .lang-fab { transform: translateY(-160%) !important; opacity: 0; pointer-events: none; }
+  html.bs-drawer #bs-bottombar, html.bs-drawer #bs3-aa, html.bs-drawer #bs2-btn, html.bs-drawer .lang-fab { display: none !important; }
+}
+@media (min-width: 769px) { #bs-bottombar { display: none; } }
+</style>
+<script id="bs-toolbar-js">
+(function () {
+  if (window.__bsBar) return; window.__bsBar = 1;
+  var PLAY = '<svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true"><path d="M8 5v14l11-7z" fill="currentColor"/></svg>';
+  var PAUSE = '<svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true"><path d="M7 5h4v14H7zM13 5h4v14h-4z" fill="currentColor"/></svg>';
+  var LEFT = '<svg viewBox="0 0 24 24" width="28" height="28" aria-hidden="true"><path d="M15 5l-7 7 7 7" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+  var RIGHT = '<svg viewBox="0 0 24 24" width="28" height="28" aria-hidden="true"><path d="M9 5l7 7-7 7" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+  var bar, play, bk, ch, prev, next;
+  var root = document.documentElement;
+  function q(s) { return document.querySelector(s); }
+  function btn(cls, html, label) { var b = document.createElement('button'); b.type = 'button'; b.className = cls; b.innerHTML = html; b.setAttribute('aria-label', label); return b; }
+  function ctl() { var c = q('.reader-header[style*="position: sticky"] .reader-controls'); return c ? c.children : null; }
+  function press(i) { var b = ctl(); if (b && b[i] && !b[i].disabled) b[i].click(); }
+  function build() {
+    if (bar || !document.body) return;
+    bar = document.createElement('div'); bar.id = 'bs-bottombar'; bar.className = 'bs-off';
+    play = btn('bs-play', PLAY, 'Play audio');
+    var pill = document.createElement('div'); pill.className = 'bs-pill';
+    prev = btn('bs-arrow', LEFT, 'Previous chapter'); next = btn('bs-arrow', RIGHT, 'Next chapter');
+    var pick = btn('bs-pick', '', 'Choose book and chapter');
+    bk = document.createElement('span'); bk.className = 'bs-bk'; ch = document.createElement('span'); ch.className = 'bs-ch';
+    pick.appendChild(bk); pick.appendChild(ch);
+    pill.appendChild(prev); pill.appendChild(pick); pill.appendChild(next);
+    bar.appendChild(play); bar.appendChild(pill); document.body.appendChild(bar);
+    pick.onclick = function () { press(0); }; prev.onclick = function () { press(1); }; next.onclick = function () { press(2); };
+    play.onclick = function () { var pb = q('.audio-play-btn'); if (pb && !pb.disabled) pb.click(); };
+  }
+  function sync() {
+    build(); if (!bar) return;
+    root.classList.toggle('bs-drawer', !!q('.sidebar.open'));
+    var b = ctl();
+    if (!b || b.length < 3) { bar.className = 'bs-off'; return; }
+    bar.className = '';
+    var pb = q('.audio-play-btn');
+    play.style.display = pb ? '' : 'none';
+    if (pb) {
+      var on = pb.classList.contains('is-playing');
+      if (play.getAttribute('data-s') !== (on ? 'p' : 's')) {
+        play.setAttribute('data-s', on ? 'p' : 's'); play.innerHTML = on ? PAUSE : PLAY; play.setAttribute('aria-label', on ? 'Pause audio' : 'Play audio');
+      }
+    }
+    var t = (b[0].textContent || '').replace(/\uD83D\uDCD6/g, '').replace(/[\u25BE\u25BC]/g, '').trim();
+    var m = /^(.*?)\s*(\d+)$/.exec(t);
+    var n1 = m ? m[1] : t, n2 = m ? m[2] : '';
+    if (bk.textContent !== n1) bk.textContent = n1;
+    if (ch.textContent !== n2) ch.textContent = n2;
+    prev.disabled = !!b[1].disabled; next.disabled = !!b[2].disabled;
+  }
+  var tick = false;
+  document.addEventListener('scroll', function (e) {
+    var t = e.target;
+    if (!t || !t.classList || !t.classList.contains('main') || tick) return;
+    tick = true;
+    requestAnimationFrame(function () {
+      tick = false;
+      var y = t.scrollTop;
+      if (y > 70) root.classList.add('bs-away'); else if (y < 30) root.classList.remove('bs-away');
+    });
+  }, true);
+  function start() { sync(); setInterval(sync, 300); }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', start); else start();
+})();
+</script>
 </head>
 <body>
 
@@ -1590,6 +1702,10 @@
 <script src="redletter.js"></script>
 <script src="features.js"></script>
 <script src="features2.js"></script>
+<script src="bs_core.js"></script>
+<script src="bs_phase2.js"></script>
+<script src="features3.js"></script>
+<script src="streak.js"></script>
 <script src="hebrew.js"></script>
 <script src="greek_strongs_data.js"></script>
 <script src="titles_judson.js"></script>
@@ -35576,6 +35692,58 @@ console.log(
     })();
 
 
+    // ---- Myanmar joined verses ----------------------------------------
+    // Some translations print two or more verses as one block (shown as
+    // "15-17"). In the data the later numbers are empty placeholders.
+    // Nothing is copied from another Bible version:
+    //  1) numbers a version skips are filled with empty placeholders
+    //     (using that version's own verse numbers);
+    //  2) for the two Judson editions, trailing numbers that Judson leaves out
+    //     are added from the Judson join list below (e.g. Luke 3:37-38).
+    const JUDSON_TRAILING_JOINS = {"Genesis 14":[22,24],"Leviticus 22":[32,33],"Leviticus 14":[54,57],"Numbers 25":[17,18],"Numbers 8":[25,26],"Deuteronomy 17":[18,20],"Deuteronomy 34":[10,12],"2 Kings 10":[35,36],"2 Kings 11":[20,21],"1 Chronicles 9":[34,44],"2 Chronicles 36":[21,23],"2 Chronicles 27":[8,9],"Esther 4":[15,17],"Job 30":[30,31],"Psalms 130":[7,8],"Psalms 6":[9,10],"Psalms 105":[44,45],"Psalms 63":[10,11],"Psalms 149":[6,9],"Isaiah 12":[5,6],"Jeremiah 29":[30,32],"Nahum 3":[18,19],"Luke 3":[37,38],"John 3":[35,36],"Romans 15":[32,33],"1 Corinthians 16":[23,24],"2 Corinthians 4":[17,18],"Philippians 1":[29,30],"1 Thessalonians 3":[12,13],"2 Thessalonians 2":[16,17],"Titus 3":[9,15],"Revelation 10":[10,11],"Revelation 19":[19,21]};
+    function padMyanmarJoinedVerses(bible, isJudson) {
+        try {
+            if (!bible || !bible.books) return;
+            Object.keys(bible.books).forEach(bk => {
+                const chs = bible.books[bk].chapters;
+                Object.keys(chs).forEach(ch => {
+                    const arr = chs[ch];
+                    if (!arr || !arr.length) return;
+                    // 1) fill skipped verse numbers
+                    const out = [];
+                    arr.forEach(v => {
+                        const m = /^\s*(\d+)/.exec(String(v));
+                        const n = m ? parseInt(m[1], 10) : out.length + 1;
+                        while (out.length > 0 && out.length + 1 < n) out.push((out.length + 1) + ' ');
+                        out.push(v);
+                    });
+                    // 2) trailing joined verses (Judson only)
+                    const j = isJudson && JUDSON_TRAILING_JOINS[bk + ' ' + ch];
+                    if (j && out.length >= j[0] && out.length < j[1] &&
+                        String(out[out.length - 1]).replace(/^\s*\d+\s*/, '').trim()) {
+                        for (let n = out.length + 1; n <= j[1]; n++) out.push(n + ' ');
+                    }
+                    chs[ch] = out;
+                });
+            });
+        } catch (e) { console.warn('padMyanmarJoinedVerses', e); }
+    }
+    window.padMyanmarJoinedVerses = padMyanmarJoinedVerses;
+
+    // Returns {hidden:true} for an empty (joined) verse, {label:'15-17'} for the
+    // first verse of a joined group, or null for an ordinary verse.
+    function getJoinedVerseInfo(ver, book, chapter, idx) {
+        const b = BIBLE_DATA[ver];
+        if (!b || b.language !== 'Myanmar') return null;
+        const arr = b.books[book] && b.books[book].chapters[chapter];
+        if (!arr || idx >= arr.length) return null;
+        const isEmpty = v => !String(v == null ? '' : v).replace(/^\s*\d+\s*/, '').trim();
+        if (isEmpty(arr[idx])) return idx > 0 ? { hidden: true } : null;
+        let k = 0;
+        while (idx + 1 + k < arr.length && isEmpty(arr[idx + 1 + k])) k++;
+        return k > 0 ? { label: (idx + 1) + '-' + (idx + 1 + k) } : null;
+    }
+
     async function loadMCL2005Bible() {
         try {
             // Prefer the data already loaded via
@@ -35625,6 +35793,14 @@ console.log(
                         const verseNumber = verse.verse ?? verses.length + 1;
                         const text = String(verse.text ?? '');
 
+                        // MCL 2005 joins some verses (e.g. 16-17) and leaves the
+                        // later numbers out. Insert empty placeholders so every
+                        // following verse keeps its true number; the reader shows
+                        // the joined verse as a range label (16-17).
+                        while (verses.length > 0 && verses.length + 1 < verseNumber) {
+                            verses.push(String(verses.length + 1) + ' ');
+                        }
+
                         verses.push(
                             String(verseNumber) + ' ' + text
                         );
@@ -35655,6 +35831,7 @@ console.log(
                 'books'
             );
 
+            padMyanmarJoinedVerses(BIBLE_DATA.mcl2005, false);
             // Tell React/application that BIBLE_DATA changed.
             window.MCL2005_LOADED = true;
 
@@ -35719,6 +35896,8 @@ loadMCL2005Bible();
             BIBLE_DATA.myanmar_judson_aionian = MYANMAR_JUDSON_AIONIAN_BIBLE_DATA;
             loaded++;
         }
+        padMyanmarJoinedVerses(BIBLE_DATA.myanmar_judson, true);
+        padMyanmarJoinedVerses(BIBLE_DATA.myanmar_judson_aionian, true);
         if (typeof TAMIL_BIBLE_DATA !== 'undefined' && !BIBLE_DATA.tamil) {
             BIBLE_DATA.tamil = TAMIL_BIBLE_DATA;
             loaded++;
@@ -36945,9 +37124,9 @@ loadMCL2005Bible();
             const taDigits = '௦௧௨௩௪௫௬௭௮௯';
             t = t.replace(/[၀-၉]/g, ch => String(myDigits.indexOf(ch)));
             t = t.replace(/[௦-௯]/g, ch => String(taDigits.indexOf(ch)));
-            t = t.normalize('NFD').replace(/[\u0300-\u036f\u0591-\u05c7]/g, '').normalize('NFC');
-            t = t.replace(/[^\p{L}\p{M}\p{N}:\-,;\s]/gu, ' ');
-            t = t.replace(/\s+/g, ' ').trim();
+            t = t.normalize('NFD').replace(/[\\u0300-\\u036f\\u0591-\\u05c7]/g, '').normalize('NFC');
+            t = t.replace(/[^\\p{L}\\p{M}\\p{N}:\\-,;\\s]/gu, ' ');
+            t = t.replace(/\\s+/g, ' ').trim();
             return t;
         }
         self.onmessage = function(e) {
@@ -36962,7 +37141,7 @@ loadMCL2005Bible();
                         const text = verses[i];
                         const verseId = verseList.length;
                         verseList.push({ book: bookName, chapter: parseInt(ch, 10), verse: i + 1, ref: bookName + ' ' + ch + ':' + (i + 1), text: text });
-                        const words = normalizeSearchTextW(text).split(/\s+/).filter(Boolean);
+                        const words = normalizeSearchTextW(text).split(/\\s+/).filter(Boolean);
                         const seen = {};
                         for (const w of words) {
                             if (seen[w]) continue;
@@ -37314,6 +37493,7 @@ loadMCL2005Bible();
                 activeVersion, book, chapter,
                 fontSize, lineHeight, readingWidth, showVerseNumbers,
                 colorLabels,
+                chains: loadLS('bs_chains', []),
             };
             const jsonText = JSON.stringify(backup, null, 2);
             const filename = `bible-backup-${new Date().toISOString().slice(0, 10)}.json`;
@@ -37348,6 +37528,13 @@ loadMCL2005Bible();
                 if (Array.isArray(data.notes)) setNotes(data.notes);
                 if (Array.isArray(data.history)) setHistory(data.history);
                 if (data.colorLabels) setColorLabels(data.colorLabels);
+                if (Array.isArray(data.chains)) {
+                    try {
+                        const cur = loadLS('bs_chains', []);
+                        const ids = new Set(cur.map(c => c.id));
+                        saveLS('bs_chains', cur.concat(data.chains.filter(c => c && c.id && !ids.has(c.id))));
+                    } catch { }
+                }
                 if (data.fontSize) setFontSize(data.fontSize);
                 if (data.lineHeight) setLineHeight(data.lineHeight);
                 if (data.readingWidth) setReadingWidth(data.readingWidth);
@@ -37425,6 +37612,7 @@ loadMCL2005Bible();
             let unsubDoc = null;
             const unsubAuth = firebaseAuth.onAuthStateChanged((u) => {
                 setUser(u);
+                try { window.__bsAuthChanged && window.__bsAuthChanged(u); } catch (e) {}
                 if (unsubDoc) { unsubDoc(); unsubDoc = null; }
                 cloudReadyRef.current = false;
                 lastCloudJsonRef.current = '';
@@ -37594,6 +37782,11 @@ loadMCL2005Bible();
         const signOutUser = useCallback(async () => {
             if (firebaseAuth) await firebaseAuth.signOut();
         }, []);
+
+        // Lets the plain-JS helpers (features3.js: Aa button, login page) reach the app.
+        useEffect(() => {
+            window.__bsApp = { fontSize, lineHeight, setFontSize, setLineHeight, signInWithGoogle, signOutUser, user };
+        }, [fontSize, lineHeight, user]);
 
         const bibles = bibleData || {};
 
@@ -37879,6 +38072,8 @@ loadMCL2005Bible();
             { id: 'bookintros', label: t('label_bookIntroduction') },
             { id: 'thngvinfo', label: '📜 THNGV – தேவனின் எபிரேயப் பெயர்கள்' },
             { id: 'strongs', label: t('nav_strongs') },
+            { id: 'wordstudy', label: '🔎 Word Study Pro' },
+            { id: 'translab', label: '⚖️ Translation Lab' },
             { id: 'dictionary', label: t('nav_dictionary') },
             { id: 'audiodownload', label: t('nav_audiodownload') },
             { id: 'history', label: t('nav_history') },
@@ -38218,6 +38413,7 @@ loadMCL2005Bible();
 
         const [popup, setPopup] = useState({ show: false, x: 0, y: 0, ref: '', text: '', verseIdx: 0 });
         const [xrefOpenIdx, setXrefOpenIdx] = useState(null);
+        const [cxRoot, setCxRoot] = useState(null);   // verse whose Connection Explorer is open
         // Which cross-reference (by its ref string, e.g. "John 1:1") is
         // currently showing its small text-preview box under the list of
         // reference chips. Only one preview is open at a time, and it's
@@ -38622,7 +38818,8 @@ loadMCL2005Bible();
         // scroll offset you had in the old chapter, which can drop you into
         // the middle of the new one instead of starting at verse 1.
         useEffect(() => {
-            const target = pendingVerseScrollRef.current;
+            let target = pendingVerseScrollRef.current;
+            if (!target && window.__bsPendingVerse) { target = window.__bsPendingVerse; window.__bsPendingVerse = null; }
             if (target && target.book === book && target.chapter === chapter) {
                 pendingVerseScrollRef.current = null;
                 // Wait a tick so the new chapter's verses have actually
@@ -38804,6 +39001,7 @@ loadMCL2005Bible();
                 const bg = isHl && hlColor ? hlColor + '15' : (isSel ? 'rgba(79,140,255,0.10)' : 'transparent');
                 const border = isHl && hlColor ? `3px solid ${hlColor}` : (isSel ? '3px dashed rgba(79,140,255,0.5)' : '3px solid transparent');
                 const displayText = stripVerseNumber(v);
+                const joined = getJoinedVerseInfo(activeVersion, book, chapter, idx);
                 const xrefKey = getXrefKey(book, chapter, idx + 1);
                 const xrefs = (typeof CROSS_REFERENCES !== 'undefined' && CROSS_REFERENCES[xrefKey]) || null;
                 const xrefIsOpen = xrefOpenIdx === idx;
@@ -38821,6 +39019,7 @@ loadMCL2005Bible();
                 return React.createElement('div', {
                     key: idx,
                     id: 'verse-anchor-' + (idx + 1),
+                    style: joined && joined.hidden ? { display: 'none' } : undefined,
                 },
                     titleData && React.createElement('div', {
                         style: { margin: '22px 0 10px', padding: '0 10px', textAlign: 'center' }
@@ -38853,7 +39052,7 @@ loadMCL2005Bible();
                         },
                         title: isRedLetter ? 'Words of God / Christ' : undefined,
                     },
-                        showVerseNumbers && React.createElement('span', { className: 'verse-number' }, idx + 1),
+                        showVerseNumbers && React.createElement('span', { className: 'verse-number' }, joined && joined.label ? joined.label : idx + 1),
                         renderVerseWords(displayText, ref),
                         isBookmarked(ref) && React.createElement('span', { style: { marginLeft: 8, fontSize: '0.7rem', color: '#4f8cff', opacity: 0.5 } }, '✦'),
                         xrefs && React.createElement('span', {
@@ -38937,7 +39136,11 @@ loadMCL2005Bible();
                             opacity: 0.85,
                             whiteSpace: 'nowrap',
                         }
-                    }, x.ref + (xi < xrefs.length - 1 ? ' •' : '')))),
+                    }, x.ref + (xi < xrefs.length - 1 ? ' •' : ''))),
+                        React.createElement('button', {
+                            onClick: (e) => { e.stopPropagation(); setCxRoot(book + ' ' + chapter + ':' + (idx + 1)); },
+                            style: { fontSize: '0.78rem', padding: '3px 10px', borderRadius: 8, border: '1px solid rgba(79,140,255,0.5)', background: 'rgba(79,140,255,0.15)', color: '#9fc0ff', cursor: 'pointer', fontWeight: 600 }
+                        }, '🔗 Explore connections')),
                     xrefs && xrefIsOpen && xrefPreviewRef && (() => {
                         const previewTarget = parseXrefTarget(xrefPreviewRef);
                         // Always show every installed version here (capped at
@@ -39220,6 +39423,10 @@ loadMCL2005Bible();
                         )
                         : React.createElement('div', { style: { fontSize: '0.85rem', color: 'rgba(255,255,255,0.4)' } }, 'No dictionary entry found.'),
                     React.createElement('button', {
+                        onClick: () => { window.__bsWordStudyCode = strongsPopup.code; setStrongsPopup(null); setCurrentPage('wordstudy'); },
+                        style: { marginTop: 14, width: '100%', padding: '8px', background: 'rgba(79,140,255,0.18)', border: '1px solid rgba(79,140,255,0.5)', borderRadius: 8, color: '#9fc0ff', cursor: 'pointer' }
+                    }, '🔎 Word Study (all verses)'),
+                    React.createElement('button', {
                         onClick: () => setStrongsPopup(null),
                         style: { marginTop: 14, width: '100%', padding: '8px', background: 'rgba(255,255,255,0.06)', border: 'none', borderRadius: 8, color: 'rgba(255,255,255,0.7)', cursor: 'pointer' }
                     }, 'Close')
@@ -39296,6 +39503,7 @@ loadMCL2005Bible();
                 ),
                 React.createElement('button', { className: 'selection-toolbar-btn dim', onClick: clearWordSelection }, 'Cancel')
             ),
+            cxRoot && React.createElement(ConnectionExplorer, { rootRef: cxRoot, onClose: () => setCxRoot(null) }),
             React.createElement('button', {
                 className: 'word-mode-fab' + (wordMode ? ' active' : ''),
                 onClick: () => { setWordMode(m => !m);
@@ -39854,7 +40062,7 @@ React.createElement('input', {
                                     style: isRedLetter ? { color: '#e0483e' } : undefined,
                                     title: isRedLetter ? 'Words of Christ' : undefined,
                                 },
-                                    React.createElement('span', { className: 'cv-num' }, idx + 1),
+                                    React.createElement('span', { className: 'cv-num' }, (getJoinedVerseInfo(ver, book, chapter, idx) || {}).label || idx + 1),
                                     text ? renderColoredWords(stripVerseNumber(text), ref, ver, wordHighlights) : '—'
                                 )
                             );
@@ -39940,7 +40148,7 @@ React.createElement('input', {
                                     style: isRedLetter ? { color: '#e0483e' } : undefined,
                                     title: isRedLetter ? 'Words of Christ' : undefined,
                                 },
-                                    React.createElement('span', { className: 'cv-num' }, idx + 1),
+                                    React.createElement('span', { className: 'cv-num' }, (getJoinedVerseInfo(ver, book, chapter, idx) || {}).label || idx + 1),
                                     text ? renderColoredWords(stripVerseNumber(text), ref, ver, wordHighlights) : '—'
                                 )
                             );
@@ -42908,7 +43116,375 @@ React.createElement('input', {
     // ============================================================
     //  PASSAGE WORKSPACE PAGE
     // ============================================================
+    // ============================================================
+    //  CONNECTION EXPLORER — browse the bundled cross-reference data
+    //  (CROSS_REFERENCES) verse by verse as a list or a small graph,
+    //  and build saved "study chains". Works fully offline. The
+    //  source data does not say HOW two verses relate, so no
+    //  relationship type (quotation, prophecy...) is ever claimed.
+    // ============================================================
+    const CHAINS_LS = 'bs_chains';
+    function parseVerseRef(ref) {
+        const m = /^(.+?)\s+(\d+):(\d+)$/.exec(String(ref || '').trim());
+        return m ? { book: m[1], chapter: Number(m[2]), verse: Number(m[3]) } : null;
+    }
+    function xrefOrder(ref) {
+        const p = parseVerseRef(ref);
+        if (!p) return 1e12;
+        const bi = CANONICAL_BOOK_ORDER.indexOf(p.book);
+        return (bi < 0 ? 99 : bi) * 1e6 + p.chapter * 1e3 + p.verse;
+    }
+    function shortRef(ref) {
+        const p = parseVerseRef(ref);
+        if (!p) return String(ref);
+        const b = /^\d/.test(p.book) ? p.book.slice(0, 4).replace(' ', '') : p.book.slice(0, 3);
+        return `${b} ${p.chapter}:${p.verse}`;
+    }
+    function ConnectionExplorer({ rootRef, onClose }) {
+        const { bibles, activeVersion, setBook, setChapter, setCurrentPage, saveBookmark } = useApp();
+        const [trail, setTrail] = useState([rootRef]);
+        const [view, setView] = useState('list');      // 'list' | 'graph'
+        const [tab, setTab] = useState('browse');      // 'browse' | 'chain'
+        const [query, setQuery] = useState('');
+        const [sortMode, setSortMode] = useState('bible'); // 'bible' | 'listed'
+        const [shown, setShown] = useState(25);
+        const [chain, setChain] = useState({ id: null, title: '', items: [] });
+        const [saved, setSaved] = useState(() => loadLS(CHAINS_LS, []));
+        const [msg, setMsg] = useState('');
+        const [depth, setDepth] = useState(1);          // graph depth (1-3)
+        const [perNode, setPerNode] = useState(10);     // links expanded per verse in the graph
+        const [zoom, setZoom] = useState(1);
+        const [sel, setSel] = useState(null);           // node tapped in the graph
+        const [group, setGroup] = useState(false);      // list grouped by book
+        const [jump, setJump] = useState('');
+        const cur = trail[trail.length - 1];
+        useEffect(() => { setSel(null); }, [cur, depth, perNode]);
+
+        const flash = (m) => { setMsg(m); setTimeout(() => setMsg(''), 2200); };
+
+        const lookup = (ref) => {
+            const p = parseVerseRef(ref);
+            if (!p) return null;
+            const order = [activeVersion].concat(Object.keys(bibles || {}).filter(k => k !== activeVersion));
+            for (const ver of order) {
+                const bk = bibles[ver] && bibles[ver].books && bibles[ver].books[p.book];
+                const chap = bk && bk.chapters && bk.chapters[p.chapter];
+                const txt = chap && chap[p.verse - 1];
+                if (txt) return { text: stripVerseNumber(txt), version: ver };
+            }
+            return null;
+        };
+
+        const connections = useMemo(() => {
+            const p = parseVerseRef(cur);
+            const raw = (p && typeof CROSS_REFERENCES !== 'undefined' && CROSS_REFERENCES[`${p.book}:${p.chapter}:${p.verse}`]) || [];
+            const seen = new Set([cur]);
+            const out = [];
+            raw.forEach(x => {
+                if (!x || !parseVerseRef(x.ref) || seen.has(x.ref)) return;
+                seen.add(x.ref);
+                const l = lookup(x.ref);
+                out.push({ ref: x.ref, text: l ? l.text : '', version: l ? l.version : '', available: !!l });
+            });
+            return out;
+        }, [cur, activeVersion, bibles]);
+
+        const filtered = useMemo(() => {
+            const q = query.trim().toLowerCase();
+            let arr = q ? connections.filter(c => c.ref.toLowerCase().includes(q) || c.text.toLowerCase().includes(q)) : connections.slice();
+            if (sortMode === 'bible') arr.sort((a, b) => xrefOrder(a.ref) - xrefOrder(b.ref));
+            return arr;
+        }, [connections, query, sortMode]);
+
+        useEffect(() => { setShown(25); }, [cur, query, sortMode]);
+
+        const here = lookup(cur);
+        const go = (ref) => { if (ref !== cur) setTrail(t => t.concat(ref)); };
+        const back = () => setTrail(t => (t.length > 1 ? t.slice(0, -1) : t));
+        const stepVerse = (d) => {
+            const p = parseVerseRef(cur); if (!p) return;
+            const nr = `${p.book} ${p.chapter}:${p.verse + d}`;
+            if (p.verse + d >= 1 && lookup(nr)) go(nr); else flash('No verse in that direction.');
+        };
+        const openReader = (ref) => {
+            if (window.BS && BS.nav.isReady()) {
+                if (BS.nav.openPassage(ref)) { onClose(); return; }
+                flash('Not available in the selected Bible.'); return;
+            }
+            const p = parseVerseRef(ref);
+            const bk = p && bibles[activeVersion] && bibles[activeVersion].books && bibles[activeVersion].books[p.book];
+            if (!bk || !bk.chapters || !bk.chapters[p.chapter]) { flash('Not available in the selected Bible.'); return; }
+            setBook(p.book); setChapter(p.chapter); setCurrentPage('read'); onClose();
+        };
+        const jumpTo = () => {
+            const p = parseVerseRef(jump);
+            const book = p && CANONICAL_BOOK_ORDER.find(b => b.toLowerCase() === p.book.toLowerCase());
+            if (!book) { flash('Use a full book name and verse, e.g. John 3:16'); return; }
+            const ref = `${book} ${p.chapter}:${p.verse}`;
+            const hasLinks = typeof CROSS_REFERENCES !== 'undefined' && CROSS_REFERENCES[`${book}:${p.chapter}:${p.verse}`];
+            if (!lookup(ref) && !hasLinks) { flash('That verse was not found.'); return; }
+            go(ref); setJump('');
+        };
+        const addToChain = (ref) => {
+            setChain(c => c.items.some(i => i.ref === ref) ? c : { ...c, items: c.items.concat({ ref, note: '' }) });
+            flash('Added to chain: ' + ref);
+        };
+        const moveItem = (i, d) => setChain(c => {
+            const items = c.items.slice(); const j = i + d;
+            if (j < 0 || j >= items.length) return c;
+            [items[i], items[j]] = [items[j], items[i]];
+            return { ...c, items };
+        });
+        const setItemNote = (i, note) => setChain(c => ({ ...c, items: c.items.map((it, k) => k === i ? { ...it, note } : it) }));
+        const removeItem = (i) => setChain(c => ({ ...c, items: c.items.filter((_, k) => k !== i) }));
+        const saveChain = () => {
+            if (!chain.items.length) { flash('Add at least one passage first.'); return; }
+            const id = chain.id || ('ch_' + Date.now());
+            const rec = { id, title: chain.title.trim() || 'Untitled chain', items: chain.items, updatedAt: new Date().toISOString() };
+            const list = loadLS(CHAINS_LS, []).filter(c => c.id !== id).concat(rec);
+            saveLS(CHAINS_LS, list); setSaved(list); setChain({ ...rec });
+            flash('Chain saved.');
+        };
+        const deleteChain = (id) => {
+            const list = loadLS(CHAINS_LS, []).filter(c => c.id !== id);
+            saveLS(CHAINS_LS, list); setSaved(list);
+            if (chain.id === id) setChain({ id: null, title: '', items: [] });
+        };
+        const chainMarkdown = () => {
+            let s = `# ${chain.title.trim() || 'Untitled chain'}\n\n`;
+            chain.items.forEach((it, i) => {
+                const l = lookup(it.ref);
+                s += `${i + 1}. **${it.ref}**` + (l ? ` — ${l.text} _(${l.version})_` : '') + '\n';
+                if (it.note.trim()) s += `   > ${it.note.trim().replace(/\n/g, '\n   > ')}\n`;
+            });
+            return s + '\n_Personal study chain. These links are for study and do not by themselves prove any conclusion._\n';
+        };
+        const exportChain = () => {
+            if (!chain.items.length) { flash('Chain is empty.'); return; }
+            const md = chainMarkdown();
+            const name = ((chain.title.trim() || 'study-chain').replace(/[^\w\-]+/g, '_')) + '.md';
+            if (window.AndroidBackup && window.AndroidBackup.exportBackup) { window.AndroidBackup.exportBackup(md, name); return; }
+            try {
+                const url = URL.createObjectURL(new Blob([md], { type: 'text/markdown' }));
+                const a = document.createElement('a'); a.href = url; a.download = name;
+                document.body.appendChild(a); a.click(); document.body.removeChild(a); URL.revokeObjectURL(url);
+            } catch (e) { flash('Export failed.'); }
+        };
+        const copyChain = () => {
+            try { navigator.clipboard.writeText(chainMarkdown()); flash('Copied.'); } catch (e) { flash('Copy not available.'); }
+        };
+
+        // ---- multi-level graph (bs_core.js: bounded, loop-safe) ----
+        const getRefsFor = (r) => {
+            const k = BS.ref.toKey(r);
+            const raw = (k && typeof CROSS_REFERENCES !== 'undefined' && CROSS_REFERENCES[k]) || [];
+            return raw.map(x => x && x.ref);
+        };
+        const graph = useMemo(() => {
+            if (view !== 'graph' || !window.BS) return null;
+            return BS.graph.build({ root: cur, depth, perNode, maxNodes: 60, getRefs: getRefsFor });
+        }, [view, cur, depth, perNode]);
+
+        const DEPTH_FILL = ['#4f8cff', '#1f3b73', '#2d5a4a', '#5a3d2d'];
+        const renderGraph = () => {
+            if (!graph) return renderGraphBasic();
+            const W = 400, H = 400;
+            const pos = BS.graph.layout(graph, W, H);
+            const selNode = sel && graph.nodes.find(n => n.ref === sel);
+            const selLook = selNode ? lookup(selNode.ref) : null;
+            return cxh('div', null,
+                cxh('div', { style: { overflow: 'auto', maxHeight: '62vh', border: '1px solid rgba(255,255,255,0.08)', borderRadius: 10, WebkitOverflowScrolling: 'touch' } },
+                    cxh('svg', { viewBox: `0 0 ${W} ${H}`, style: { width: (zoom * 100) + '%', minWidth: 300, display: 'block' }, role: 'img', 'aria-label': 'Connection graph. A list view is available for screen readers.' },
+                        graph.edges.map((e, i) => {
+                            const a = pos[e.from], b = pos[e.to]; if (!a || !b) return null;
+                            return cxh('line', { key: 'e' + i, x1: a.x, y1: a.y, x2: b.x, y2: b.y, stroke: e.kind === 'cross' ? 'rgba(255,255,255,0.08)' : 'rgba(255,255,255,0.22)', strokeWidth: 0.8, strokeDasharray: e.kind === 'cross' ? '2 2' : undefined });
+                        }),
+                        graph.nodes.map((n) => {
+                            const q = pos[n.ref]; if (!q) return null;
+                            const r = n.depth === 0 ? 24 : n.depth === 1 ? 15 : n.depth === 2 ? 11 : 9;
+                            const isSel = sel === n.ref;
+                            return cxh('g', { key: n.ref, style: { cursor: 'pointer' }, onClick: () => setSel(n.ref) },
+                                cxh('circle', { cx: q.x, cy: q.y, r, fill: DEPTH_FILL[n.depth] || '#444', stroke: isSel ? '#ffd24f' : '#4f8cff', strokeWidth: isSel ? 2.5 : 1 }),
+                                (n.depth <= 1 || zoom >= 1.8) && cxh('text', { x: q.x, y: q.y + 2.5, textAnchor: 'middle', fontSize: n.depth === 0 ? 7.5 : 6, fill: '#fff', pointerEvents: 'none' }, BS.ref.shortRef(n.ref)));
+                        }))),
+                cxh('div', { className: 'cx-note' },
+                    `${graph.nodes.length} verses, depth ${graph.depth}. Up to ${graph.perNode} links per verse are expanded, in Bible order (the data has no relevance ranking).` +
+                    (graph.capped ? ' The 60-verse limit was reached, so some links are hidden; use the list for everything.' : '')),
+                selNode && cxh('div', { className: 'workspace-panel', style: { marginTop: 8 } },
+                    cxh('div', { className: 'workspace-panel-h' }, selNode.ref + (selNode.depth ? ` · level ${selNode.depth}` : ' · selected verse')),
+                    cxh('div', { className: 'cx-text' }, selLook ? selLook.text : 'Verse text is not in the installed Bibles.'),
+                    cxh('button', { className: 'workspace-tool-btn', onClick: () => go(selNode.ref) }, '🔗 Explore from here'),
+                    cxh('button', { className: 'workspace-tool-btn', onClick: () => openReader(selNode.ref) }, '📖 Read'),
+                    cxh('button', { className: 'workspace-tool-btn', onClick: () => addToChain(selNode.ref) }, '➕ Chain'))
+            );
+        };
+        // the original single-ring graph, used only if bs_core.js failed to load
+        const renderGraphBasic = () => {
+            const nodes = filtered.slice(0, 12);
+            const cx = 160, cy = 160, R = 112;
+            return cxh('div', null,
+                cxh('svg', { viewBox: '0 0 320 320', style: { width: '100%', maxWidth: 420, display: 'block', margin: '0 auto' }, role: 'img', 'aria-label': 'Connection graph' },
+                    nodes.map((n, i) => {
+                        const a = (i / Math.max(nodes.length, 1)) * 2 * Math.PI - Math.PI / 2;
+                        return cxh('line', { key: 'l' + i, x1: cx, y1: cy, x2: cx + R * Math.cos(a), y2: cy + R * Math.sin(a), stroke: 'rgba(255,255,255,0.18)', strokeWidth: 1 });
+                    }),
+                    nodes.map((n, i) => {
+                        const a = (i / Math.max(nodes.length, 1)) * 2 * Math.PI - Math.PI / 2;
+                        const x = cx + R * Math.cos(a), y = cy + R * Math.sin(a);
+                        return cxh('g', { key: 'n' + i, style: { cursor: 'pointer' }, onClick: () => go(n.ref) },
+                            cxh('circle', { cx: x, cy: y, r: 17, fill: n.available ? '#1f3b73' : '#333', stroke: '#4f8cff', strokeWidth: 1.2 }),
+                            cxh('text', { x, y: y + 3, textAnchor: 'middle', fontSize: 7.5, fill: '#fff' }, shortRef(n.ref)));
+                    }),
+                    cxh('circle', { cx, cy, r: 26, fill: '#4f8cff' }),
+                    cxh('text', { x: cx, y: cy + 3, textAnchor: 'middle', fontSize: 8.5, fontWeight: 700, fill: '#fff' }, shortRef(cur))
+                ),
+                cxh('div', { className: 'cx-note' }, `Showing ${nodes.length} of ${filtered.length} direct links (one level only). Tap a circle to explore it; use the list to see all.`)
+            );
+        };
+
+        // ---- report (copy / export) ----
+        const reportMarkdown = () => {
+            let s = `# Connections for ${cur}\n\n`;
+            if (here) s += `> ${here.text} _(${here.version})_\n\n`;
+            s += `Source: the app's bundled cross-reference data. ${connections.length} connection${connections.length === 1 ? '' : 's'}; ` +
+                `the data does not say HOW passages relate, so no relationship type is claimed.\n`;
+            const groups = (window.BS ? BS.graph.groupByBook(connections.map(c => c.ref)) : [{ book: 'All', refs: connections.map(c => c.ref) }]);
+            groups.forEach(g => {
+                s += `\n## ${g.book} (${g.refs.length})\n`;
+                g.refs.forEach(r => {
+                    const c = connections.find(x => x.ref === r);
+                    s += `- **${r}**` + (c && c.available ? ` — ${c.text} _(${c.version})_` : '') + '\n';
+                });
+            });
+            return s;
+        };
+        const exportText = (md, name) => {
+            if (window.AndroidBackup && window.AndroidBackup.exportBackup) { window.AndroidBackup.exportBackup(md, name); return; }
+            try {
+                const url = URL.createObjectURL(new Blob([md], { type: 'text/markdown' }));
+                const a = document.createElement('a'); a.href = url; a.download = name;
+                document.body.appendChild(a); a.click(); document.body.removeChild(a); URL.revokeObjectURL(url);
+            } catch (e) { flash('Export failed.'); }
+        };
+        const copyReport = () => { try { navigator.clipboard.writeText(reportMarkdown()); flash('Report copied.'); } catch (e) { flash('Copy not available.'); } };
+        const exportReport = () => exportText(reportMarkdown(), ('connections_' + cur.replace(/[^\w]+/g, '_') + '.md'));
+        const addShownToChain = () => {
+            const refs = ordered.slice(0, Math.min(shown, 50)).map(c => c.ref);
+            setChain(c => { const have = new Set(c.items.map(i => i.ref)); return { ...c, items: c.items.concat(refs.filter(r => !have.has(r)).map(r => ({ ref: r, note: '' }))) }; });
+            flash(`Added up to ${refs.length} shown passages to the chain.`);
+        };
+
+        // list order: grouped by book forces Bible order
+        const ordered = useMemo(() => (group ? filtered.slice().sort((a, b) => xrefOrder(a.ref) - xrefOrder(b.ref)) : filtered), [filtered, group]);
+        const renderList = () => {
+            const rows = [];
+            let lastBook = null;
+            ordered.slice(0, shown).forEach(c => {
+                const b = BS_bookOf(c.ref);
+                if (group && b !== lastBook) {
+                    lastBook = b;
+                    rows.push(cxh('div', { key: 'h' + b, className: 'workspace-panel-h', style: { marginTop: 10 } }, `${b} (${ordered.filter(x => BS_bookOf(x.ref) === b).length})`));
+                }
+                rows.push(cxh('div', { key: c.ref, className: 'cx-item' },
+                    cxh('div', { className: 'cx-ref' }, c.ref),
+                    cxh('div', { className: 'cx-text' }, c.available ? (c.text.length > 150 ? c.text.slice(0, 150) + '…' : c.text) : 'Verse text is not in the installed Bibles.'),
+                    cxh('div', null,
+                        cxh('button', { className: 'workspace-tool-btn', onClick: () => go(c.ref) }, '🔗 Explore'),
+                        cxh('button', { className: 'workspace-tool-btn', onClick: () => addToChain(c.ref) }, '➕ Chain'),
+                        cxh('button', { className: 'workspace-tool-btn', onClick: () => openReader(c.ref) }, '📖 Read'))));
+            });
+            return cxh('div', null, rows,
+                ordered.length > shown && cxh('button', { className: 'workspace-tool-btn', onClick: () => setShown(s => s + 25) }, `Show more (${ordered.length - shown} left)`));
+        };
+        const BS_bookOf = (ref) => { const p = parseVerseRef(ref); return p ? p.book : ''; };
+
+        const renderChain = () => cxh('div', null,
+            cxh('input', { className: 'cx-input', placeholder: 'Chain title', value: chain.title, onChange: (e) => setChain({ ...chain, title: e.target.value }) }),
+            chain.items.length === 0 && cxh('div', { className: 'cx-note' }, 'Empty. Use "➕ Chain" on any passage while browsing.'),
+            chain.items.map((it, i) => {
+                const l = lookup(it.ref);
+                return cxh('div', { key: it.ref, className: 'cx-item' },
+                    cxh('div', { className: 'cx-ref' }, `${i + 1}. ${it.ref}`),
+                    cxh('div', { className: 'cx-text' }, l ? (l.text.length > 110 ? l.text.slice(0, 110) + '…' : l.text) : ''),
+                    cxh('textarea', { className: 'workspace-textarea', placeholder: 'Why is this passage connected? (your own note)', value: it.note, onChange: (e) => setItemNote(i, e.target.value) }),
+                    cxh('div', null,
+                        cxh('button', { className: 'workspace-tool-btn', onClick: () => moveItem(i, -1) }, '⬆️'),
+                        cxh('button', { className: 'workspace-tool-btn', onClick: () => moveItem(i, 1) }, '⬇️'),
+                        cxh('button', { className: 'workspace-tool-btn', onClick: () => { go(it.ref); setTab('browse'); } }, '🔗 Explore'),
+                        cxh('button', { className: 'workspace-tool-btn', onClick: () => removeItem(i) }, '✖ Remove')));
+            }),
+            cxh('div', { style: { marginTop: 10 } },
+                cxh('button', { className: 'workspace-tool-btn', onClick: saveChain }, '💾 Save'),
+                cxh('button', { className: 'workspace-tool-btn', onClick: exportChain }, '📤 Export .md'),
+                cxh('button', { className: 'workspace-tool-btn', onClick: copyChain }, '📋 Copy'),
+                cxh('button', { className: 'workspace-tool-btn', onClick: () => setChain({ id: null, title: '', items: [] }) }, '🆕 New')),
+            saved.length > 0 && cxh('div', { style: { marginTop: 16 } },
+                cxh('div', { className: 'workspace-panel-h' }, `Saved chains (${saved.length})`),
+                saved.map(c => cxh('div', { key: c.id, className: 'cx-item' },
+                    cxh('div', { className: 'cx-ref' }, c.title),
+                    cxh('div', { className: 'cx-text' }, c.items.map(i => i.ref).join(' → ')),
+                    cxh('button', { className: 'workspace-tool-btn', onClick: () => setChain({ id: c.id, title: c.title, items: c.items }) }, '✏️ Open'),
+                    cxh('button', { className: 'workspace-tool-btn', onClick: () => deleteChain(c.id) }, '🗑️ Delete'))))
+        );
+
+        return cxh('div', { className: 'cx-overlay' },
+            cxh('div', { className: 'cx-head' },
+                cxh('button', { className: 'workspace-tool-btn', onClick: onClose }, '✖ Close'),
+                cxh('div', { className: 'cx-title' }, '🔗 Connection Explorer'),
+                cxh('div', { style: { flex: 1 } }),
+                cxh('button', { className: `workspace-tool-btn ${tab === 'browse' ? 'cx-on' : ''}`, onClick: () => setTab('browse') }, 'Browse'),
+                cxh('button', { className: `workspace-tool-btn ${tab === 'chain' ? 'cx-on' : ''}`, onClick: () => setTab('chain') }, `Chain (${chain.items.length})`)),
+            cxh('div', { className: 'cx-body' },
+                msg && cxh('div', { className: 'cx-toast' }, msg),
+                tab === 'chain' ? renderChain() : cxh('div', null,
+                    cxh('div', { className: 'workspace-panel' },
+                        cxh('div', { className: 'workspace-panel-h' }, cur + (here ? `  ·  ${here.version}` : '')),
+                        cxh('div', { style: { fontSize: '0.88rem', color: 'rgba(255,255,255,0.85)', lineHeight: 1.7, marginBottom: 10 } }, here ? here.text : 'Verse text is not available in the installed Bibles.'),
+                        cxh('button', { className: 'workspace-tool-btn', onClick: back, disabled: trail.length < 2 }, '⬅ Back'),
+                        cxh('button', { className: 'workspace-tool-btn', onClick: () => stepVerse(-1) }, '◀ Prev verse'),
+                        cxh('button', { className: 'workspace-tool-btn', onClick: () => stepVerse(1) }, 'Next verse ▶'),
+                        cxh('button', { className: 'workspace-tool-btn', onClick: () => addToChain(cur) }, '➕ Chain'),
+                        cxh('button', { className: 'workspace-tool-btn', onClick: () => here && saveBookmark(cur, here.text, here.version) }, '🔖 Bookmark'),
+                        cxh('button', { className: 'workspace-tool-btn', onClick: () => openReader(cur) }, '📖 Read'),
+                        trail.length > 1 && cxh('div', { className: 'cx-note' }, 'Path: ' + trail.map(shortRef).join(' → '))),
+                    cxh('div', { style: { marginTop: 12 } },
+                        cxh('input', { className: 'cx-input', placeholder: 'Go to a passage, e.g. John 3:16 (then Enter)', value: jump, onChange: (e) => setJump(e.target.value), onKeyDown: (e) => { if (e.key === 'Enter') jumpTo(); } }),
+                        cxh('input', { className: 'cx-input', placeholder: 'Filter these results by reference or word…', value: query, onChange: (e) => setQuery(e.target.value) }),
+                        cxh('div', null,
+                            cxh('button', { className: `workspace-tool-btn ${view === 'list' ? 'cx-on' : ''}`, onClick: () => setView('list') }, '☰ List'),
+                            cxh('button', { className: `workspace-tool-btn ${view === 'graph' ? 'cx-on' : ''}`, onClick: () => setView('graph') }, '🕸️ Graph'),
+                            view === 'list' && cxh('button', { className: `workspace-tool-btn ${group ? 'cx-on' : ''}`, onClick: () => setGroup(g => !g) }, '📚 Group by book'),
+                            view === 'list' && cxh('button', { className: 'workspace-tool-btn', disabled: group, onClick: () => setSortMode(m => m === 'bible' ? 'listed' : 'bible') }, sortMode === 'bible' ? 'Sort: Bible order' : 'Sort: as listed in data')),
+                        view === 'graph' && cxh('div', { style: { display: 'flex', flexWrap: 'wrap', gap: 6, alignItems: 'center', margin: '6px 0' } },
+                            cxh('label', { className: 'cx-note', style: { margin: 0 } }, 'Depth ',
+                                cxh('select', { value: depth, onChange: (e) => setDepth(Number(e.target.value)), className: 'workspace-select' }, [1, 2, 3].map(d => cxh('option', { key: d, value: d }, d)))),
+                            cxh('label', { className: 'cx-note', style: { margin: 0 } }, 'Links per verse ',
+                                cxh('select', { value: perNode, onChange: (e) => setPerNode(Number(e.target.value)), className: 'workspace-select' }, [5, 10, 20, 40].map(d => cxh('option', { key: d, value: d }, d)))),
+                            cxh('button', { className: 'workspace-tool-btn', onClick: () => setZoom(z => Math.max(1, +(z - 0.5).toFixed(1))) }, '➖'),
+                            cxh('button', { className: 'workspace-tool-btn', onClick: () => setZoom(z => Math.min(4, +(z + 0.5).toFixed(1))) }, '➕'),
+                            cxh('button', { className: 'workspace-tool-btn', onClick: () => { setZoom(1); setSel(null); } }, '⟲ Reset view')),
+                        cxh('div', { className: 'cx-note' }, connections.length === 0
+                            ? 'No cross references are indexed for this verse.'
+                            : `${filtered.length}${filtered.length !== connections.length ? ' of ' + connections.length : ''} connections. Source data lists them only as "Cross reference" (no relationship type).`),
+                        connections.length > 0 && cxh('div', null,
+                            cxh('button', { className: 'workspace-tool-btn', onClick: copyReport }, '📋 Copy report'),
+                            cxh('button', { className: 'workspace-tool-btn', onClick: exportReport }, '📤 Export report'),
+                            view === 'list' && cxh('button', { className: 'workspace-tool-btn', onClick: addShownToChain }, '➕ Add shown to chain')),
+                        connections.length > 0 && (view === 'graph' ? renderGraph() : renderList())))
+            )
+        );
+    }
+    const cxh = React.createElement;
+
     function WorkspacePage() {
+        const [explorerRoot, setExplorerRoot] = useState(null);
+        return React.createElement(React.Fragment, null,
+            React.createElement(WorkspacePageBase, { onExplore: setExplorerRoot }),
+            explorerRoot && React.createElement(ConnectionExplorer, { rootRef: explorerRoot, onClose: () => setExplorerRoot(null) })
+        );
+    }
+
+    function WorkspacePageBase(props) {
         const {
             book, setBook, chapter, setChapter, booksList, bookLabels, chaptersList,
             verses, getRef, saveBookmark, saveHighlight, saveNote, notes, activeVersion, t,
@@ -42965,9 +43541,11 @@ React.createElement('input', {
                                 React.createElement('button', { className: 'workspace-tool-btn', onClick: () => saveBookmark(selectedRef, selectedText, activeVersion) }, '🔖 Bookmark'),
                                 React.createElement('button', { className: 'workspace-tool-btn', onClick: () => saveHighlight(selectedRef, selectedText, activeVersion, '#4f8cff') }, '🖍️ Highlight')
                             ),
-                            React.createElement('div', { className: 'workspace-panel-h' }, `Cross References (${xrefs.length})`),
+                                            React.createElement('div', { style: { marginBottom: 10 } },
+                                React.createElement('button', { className: 'workspace-tool-btn', onClick: () => props.onExplore(selectedRef) }, '🔗 Explore Connections')),
+            React.createElement('div', { className: 'workspace-panel-h' }, `Cross References (${xrefs.length})`),
                             xrefs.length
-                                ? xrefs.map((x, i) => React.createElement('div', { key: i, className: 'workspace-xref' }, `${x.ref}${x.note ? ' — ' + x.note : ''}`))
+                                ? xrefs.map((x, i) => React.createElement('div', { key: i, className: 'workspace-xref', onClick: () => props.onExplore(x.ref) }, `${x.ref}${x.note ? ' — ' + x.note : ''}`))
                                 : React.createElement('div', { style: { color: 'rgba(255,255,255,0.3)', fontSize: '0.8rem', marginBottom: 10 } }, 'No cross references found for this verse.'),
                             studyNote && React.createElement('div', { style: { marginTop: 16 } },
                                 renderStudyNoteCard(studyNote, selectedRef)
@@ -43767,6 +44345,20 @@ React.createElement('input', {
 
         return React.createElement('div', { className: 'page-enter' },
             React.createElement('h2', { style: { fontSize: '1.4rem', fontWeight: 600, marginBottom: 24 } }, 'Settings'),
+            window.__bsStreak && React.createElement('div', {
+                onClick: () => window.__bsStreak.open(),
+                style: { display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12, padding: '14px 16px', marginBottom: 24, borderRadius: 18, cursor: 'pointer', background: 'linear-gradient(135deg, rgba(255,138,0,0.18), rgba(79,124,255,0.18))', border: '1px solid rgba(255,255,255,0.15)' }
+            },
+                React.createElement('div', { style: { display: 'flex', alignItems: 'center', gap: 10 } },
+                    React.createElement('span', { style: { width: 34, height: 34, display: 'inline-block' }, dangerouslySetInnerHTML: { __html: window.__bsStreak.flame(window.__bsStreak.info().streak > 0) } }),
+                    React.createElement('div', null,
+                        React.createElement('div', { style: { fontWeight: 800, fontSize: '1rem' } }, window.__bsStreak.info().streak + ' day streak'),
+                        React.createElement('div', { style: { fontSize: '0.78rem', opacity: 0.65 } }, 'Boy / Girl, reminders, widget')
+                    )
+                ),
+                React.createElement('span', { style: { fontSize: '1.2rem', opacity: 0.7 } }, '\u203A')
+            ),
+            window.BibleThemePack && window.BibleThemePack.renderSettings && window.BibleThemePack.renderSettings(React),
             React.createElement('div', { style: { marginBottom: 28 } },
                 React.createElement('h3', { style: { fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '0.06em', color: 'rgba(255,255,255,0.25)', fontWeight: 600, marginBottom: 12 } }, 'Reading'),
                 React.createElement('div', { style: { display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '12px 0', borderBottom: '1px solid rgba(255,255,255,0.03)' } },
@@ -43887,8 +44479,40 @@ React.createElement('input', {
     }
 
     function AppContent() {
-        const { currentPage, sidebarOpen, setSidebarOpen } = useApp();
+        const { currentPage, sidebarOpen, setSidebarOpen, bibles, activeVersion, setBook, setChapter, setCurrentPage } = useApp();
 
+        // Central "open this passage" helper (bs_core.js -> BS.nav.openPassage).
+        // Always reads the latest values through a ref, registered once.
+        const navLatest = useRef({});
+        navLatest.current = { bibles, activeVersion, setBook, setChapter, setCurrentPage };
+        useEffect(() => {
+            if (!window.BS) return;
+            BS.ref.setBookOrder(CANONICAL_BOOK_ORDER);
+            BS.nav.register({
+                openPassage: (p) => {
+                    const n = navLatest.current;
+                    const bk = n.bibles && n.bibles[n.activeVersion] && n.bibles[n.activeVersion].books && n.bibles[n.activeVersion].books[p.book];
+                    if (!bk || !bk.chapters || !bk.chapters[p.chapter]) return false;   // not in the selected Bible
+                    window.__bsPendingVerse = p;
+                    n.setBook(p.book); n.setChapter(p.chapter); n.setCurrentPage('read');
+                    // Same chapter already open: the reader's chapter effect won't re-run, so scroll here.
+                    setTimeout(() => {
+                        const t = window.__bsPendingVerse; if (!t) return;
+                        const el = document.getElementById('verse-anchor-' + t.verse);
+                        window.__bsPendingVerse = null;
+                        if (el) { el.scrollIntoView({ behavior: 'auto', block: 'center' }); el.classList.add('xref-jump-flash'); setTimeout(() => el.classList.remove('xref-jump-flash'), 1800); }
+                    }, 450);
+                    return true;
+                }
+            });
+        }, []);
+
+        // Phase 2 pages (bs_phase2.js), created once on first use
+        const getP2 = () => {
+            if (!window.BS_P2) return null;
+            if (!window.BS_P2._pages) window.BS_P2._pages = window.BS_P2.create({ React, useApp, books: CANONICAL_BOOK_ORDER });
+            return window.BS_P2._pages;
+        };
         const renderPage = () => {
             switch (currentPage) {
                 case 'read':
@@ -43933,6 +44557,14 @@ React.createElement('input', {
                     return React.createElement(ThngvInfoPage);
                 case 'strongs':
                     return React.createElement(StrongsPage);
+                case 'wordstudy': {
+                    const P = getP2();
+                    return P ? React.createElement(P.WordStudyPage) : React.createElement('div', { className: 'empty-state' }, 'Word Study did not load (bs_phase2.js missing).');
+                }
+                case 'translab': {
+                    const P = getP2();
+                    return P ? React.createElement(P.CompareLabPage) : React.createElement('div', { className: 'empty-state' }, 'Translation Lab did not load (bs_phase2.js missing).');
+                }
                 case 'dictionary':
                     return React.createElement(DictionaryPage);
                 case 'audiodownload':

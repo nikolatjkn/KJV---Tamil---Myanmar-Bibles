@@ -3,10 +3,12 @@
 // and is required (alongside manifest.json) for Chrome/Android to
 // treat this as an installable PWA.
 
-const CACHE_NAME = 'bible-study-v32';
+const CACHE_NAME = 'bible-study-v46';
 const APP_SHELL = [
     './',
     './index.html',
+    './theme-pack.css',
+    './theme-pack.js',
     './manifest.json',
     './icon-192.png',
     './icon-512.png',
@@ -15,7 +17,6 @@ const APP_SHELL = [
     './tamil.js',
     './thngv.js',
     './thngv_info.js',
-    './Myanmar_Standard_2005_Clean.json',
     './Myanmar_Standard_2005_Clean.js',
     './crossrefs.js',
     './audio_ids.js',
@@ -27,6 +28,9 @@ const APP_SHELL = [
     './redletter.js',
     './features.js',
     './features2.js',
+    './features3.js',
+    './bs_core.js',
+    './bs_phase2.js',
     './titles_judson.js',
     './titles_mcl2005.js',
     './titles_kjv.js',
